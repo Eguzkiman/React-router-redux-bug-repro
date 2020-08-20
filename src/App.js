@@ -1,8 +1,31 @@
 import React from 'react';
+import { Provider, connect } from 'react-redux';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {counter: 0},
+  reducers: {
+    increment: state => ({counter: state.counter + 1}),
+  }
+})
+
+const store = configureStore({
+  reducer: counterSlice.reducer
+})
+
+function ProvidedApp () {
+  return (
+    <Provider store={store}>
+      <ConnectedApp/>
+    </Provider>
+  )
+}
+
+function App(props) {
+  let { counter, increment } = props;
   return (
     <div className="App">
       <header className="App-header">
@@ -10,17 +33,17 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={increment}>increment</button>
+        counter: {counter}
       </header>
     </div>
   );
 }
 
-export default App;
+const ConnectedApp = connect((state) => ({
+  counter: state.counter
+}), {
+  increment: counterSlice.actions.increment
+})(App);
+
+export default ProvidedApp;
