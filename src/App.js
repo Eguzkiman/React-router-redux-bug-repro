@@ -1,6 +1,8 @@
 import React from 'react';
 import { Provider, connect } from 'react-redux';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { Route, Switch } from 'react-router'
+import { BrowserRouter, NavLink } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 
@@ -19,7 +21,9 @@ const store = configureStore({
 function ProvidedApp () {
   return (
     <Provider store={store}>
-      <ConnectedApp/>
+      <BrowserRouter>
+        <ConnectedApp/>
+      </BrowserRouter>
     </Provider>
   )
 }
@@ -27,15 +31,32 @@ function ProvidedApp () {
 function App(props) {
   let { counter, increment } = props;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <button onClick={increment}>increment</button>
-        counter: {counter}
-      </header>
+    <div>
+      <Switch>
+          <Route path="/a">
+            <div>
+              Route A?
+              counter: {counter}
+              <button onClick={increment}>increment</button>
+            </div>
+          </Route>
+          <Route path="/b">
+            <div>
+              Route B?
+              counter: {counter}
+              <button onClick={increment}>increment</button>
+            </div>
+          </Route>
+      </Switch>
+      <div>
+        <NavLink to="/a">
+          To A
+        </NavLink>
+        <br/>
+        <NavLink to="/b">
+          To B
+        </NavLink>
+      </div>
     </div>
   );
 }
