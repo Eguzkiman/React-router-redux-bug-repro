@@ -1,9 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { Route, Switch } from 'react-router'
-import { BrowserRouter, NavLink } from 'react-router-dom';
-import logo from './logo.svg';
+import { BrowserRouter, NavLink, withRouter} from 'react-router-dom';
 import './App.css';
 
 const counterSlice = createSlice({
@@ -28,6 +28,22 @@ function ProvidedApp () {
   )
 }
 
+function Nav () {
+  return (
+    <div>
+        <NavLink to="/a">
+          To A
+        </NavLink>
+        <br/>
+        <NavLink to="/b">
+          To B
+        </NavLink>
+      </div>
+  )
+}
+
+const ConnectedNav = compose(withRouter, connect(() => { }))(Nav);
+
 function App(props) {
   let { counter, increment } = props;
   return (
@@ -48,23 +64,15 @@ function App(props) {
             </div>
           </Route>
       </Switch>
-      <div>
-        <NavLink to="/a">
-          To A
-        </NavLink>
-        <br/>
-        <NavLink to="/b">
-          To B
-        </NavLink>
-      </div>
+      <ConnectedNav/>
     </div>
   );
 }
 
-const ConnectedApp = connect((state) => ({
+const ConnectedApp = compose(withRouter, connect((state) => ({
   counter: state.counter
 }), {
   increment: counterSlice.actions.increment
-})(App);
+}))(App);
 
 export default ProvidedApp;
